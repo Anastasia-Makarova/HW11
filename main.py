@@ -28,6 +28,14 @@ class Name(Field):
     def __init__(self, value):
         super().__init__(value)
 
+    @property
+    def value(self):
+        return self.__value
+
+    @value.setter
+    def value(self, name):
+        self.__value = name
+
 
 class Phone(Field):
     def __init__(self, value):
