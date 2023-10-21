@@ -32,11 +32,16 @@ class Name(Field):
 class Phone(Field):
     def __init__(self, value):
         super().__init__(value)
-        self.validate_phone()
 
-    def validate_phone(self):
-        if not self.value.isdigit() or len(self.value) != 10:
+    @property
+    def value(self):
+        return self.__value
+
+    @value.setter
+    def value(self, phone):
+        if not phone.isdigit() or len(phone) != 10:
             raise ValueError
+        self.__value = phone
 
     def __str__(self):
         return str(self.value)
@@ -45,18 +50,22 @@ class Phone(Field):
 class Birthday(Field):
     def __init__(self, value=None):
         super().__init__(value)
-        self.validate_birthday()
 
-    def validate_birthday(self):
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, birthday):
         try:
-            if self.value:
-                datetime.strptime(self.value, '%Y-%m-%d')
+            if birthday:
+                datetime.strptime(birthday, '%Y-%m-%d')
         except ValueError:
-            raise ValueError("Invalid birthday format. Please use YYYY-MM-DD.")
-        
+            raise ValueError
+        self._value = birthday
+
     def __str__(self):
         return str(self.value)
-
 
 class Record:
     def __init__(self, name, birthday=None):
