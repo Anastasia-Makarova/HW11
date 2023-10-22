@@ -229,10 +229,9 @@ def delete_func(*args):
 def iter_func(*args):
     n = int(args[-1])
     for block in address_book.iterator(n):
-        if block:
-            for line in list(block):
-                print(f"{str(line[1])}")
-            input("Press Enter for next records")
+        for line in list(block):
+            print(f"{str(line[1])}")
+        input("Press Enter for next records")
 
 
 @deco_error
