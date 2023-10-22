@@ -141,7 +141,7 @@ class AddressBook(UserDict):
 
     def iterator(self, n=5):
         while self.idx < len(address_book):   
-            yield islice(address_book, n)
+            yield str(islice(address_book, n))
             self.idx += n
 
 
