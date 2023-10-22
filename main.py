@@ -1,5 +1,6 @@
 from collections import UserDict
-from datetime import datetime, timedelta
+from datetime import datetime
+from itertools import islice
 
 
 def deco_error(func):
@@ -123,12 +124,13 @@ class Record:
         string_for_phones = f", phones: {', '.join(str(p) for p in self.phones)}" if len(self.phones) > 0 else ""
         string_for_birthday = f", birthday: {self.birthday}, days to birthday: {self.days_to_birthday()}" if self.birthday else ""
         return f"Contact name: {self.name.value}{string_for_phones}{string_for_birthday}"
-        # return f"Contact name: {self.name.value}, phones: {', '.join(str(p) for p in self.phones)}, birthday: {self.birthday}, days to birthday: {self.days_to_birthday()}"
+       
 
 
 class AddressBook(UserDict):
     def add_record(self, record):
         self.data[record.name.value] = record
+        self.idx = 0
 
     def find(self, name):
         return self.data.get(name)
@@ -136,6 +138,13 @@ class AddressBook(UserDict):
     def delete(self, name):
         if name in self.data:
             del self.data[name]
+
+    def iterator(self, n=5):
+        while self.idx < len(address_book):   
+            yield islice(address_book, n)
+            self.idx += n
+
+
         
     def __str__(self) -> str:
         return "\n".join(str(r) for r in self.data.values())
@@ -161,6 +170,7 @@ def parser(user_input: str):
         "Change": change_func,
         "Phone": search_func,
         "Show All": show_func,
+        "Show Iterated": iter_func,
         "Del": delete_func 
     }
 
@@ -195,7 +205,6 @@ def add_func(*args):
         string_for_phones = f"phone number(s) {', '.join(phone_numbers)}" if len(phone_numbers) > 0 else "no phone numbers"
         string_for_birthday = f" and birthday on {birthday}" if record.birthday else ""
         return f"User {name} has been added to the phone book with {string_for_phones}{string_for_birthday}"
-    
 
 
 @deco_error
@@ -217,6 +226,13 @@ def delete_func(*args):
     address_book.delete(name)
     return f"User {name} has been deleted from the phone book"
 
+
+@deco_error
+def iter_func(*args):
+    n = int(args[-1])
+    for line in address_book.iterator(n):
+        input("Press Enter for next records")
+        print(line)
 
 @deco_error
 def search_func(*args):
