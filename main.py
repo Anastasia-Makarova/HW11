@@ -76,6 +76,7 @@ class Birthday(Field):
     def __str__(self):
         return str(self.value)
 
+
 class Record:
     def __init__(self, name, birthday=None):
         self.name = Name(name)
@@ -126,7 +127,6 @@ class Record:
         return f"Contact name: {self.name.value}{string_for_phones}{string_for_birthday}"
        
 
-
 class AddressBook(UserDict):
     def add_record(self, record):
         self.data[record.name.value] = record
@@ -141,11 +141,9 @@ class AddressBook(UserDict):
 
     def iterator(self, n=5):
         while self.idx < len(address_book):   
-            yield str(islice(address_book, n))
+            yield islice(address_book.items(), self.idx, self.idx +n)
             self.idx += n
 
-
-        
     def __str__(self) -> str:
         return "\n".join(str(r) for r in self.data.values())
 
@@ -230,9 +228,12 @@ def delete_func(*args):
 @deco_error
 def iter_func(*args):
     n = int(args[-1])
-    for line in address_book.iterator(n):
-        input("Press Enter for next records")
-        print(line)
+    for block in address_book.iterator(n):
+        if block:
+            for line in list(block):
+                print(f"{str(line[1])}")
+            input("Press Enter for next records")
+
 
 @deco_error
 def search_func(*args):
