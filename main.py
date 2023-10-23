@@ -234,6 +234,7 @@ def iter_func(*args):
     return "End of the phone book"
 
 
+
 @deco_error
 def search_func(*args):
     name = args[0]
