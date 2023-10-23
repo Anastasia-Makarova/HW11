@@ -229,9 +229,9 @@ def delete_func(*args):
 def iter_func(*args):
     n = int(args[-1])
     for block in address_book.iterator(n):
-        for line in list(block):
-            print(f"{str(line[1])}")
         input("Press Enter for next records")
+        print ("\n".join(str(line[1]) for line in list(block)))    
+    return "End of the phone book"
 
 
 @deco_error
